@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import express from "express";
 
 class AppUpdater {
   constructor() {
@@ -124,9 +125,21 @@ app.on('window-all-closed', () => {
   }
 });
 
+function serveTileLayers() {
+  const server = express();
+  const tilesPath = path.join(__dirname, "../../assets/tiles");
+  server.use("/tiles", express.static(tilesPath));
+
+  const PORT = 3000;
+  server.listen(PORT, () => {
+    console.log(`Tile server running at http://localhost:${PORT}/tiles`);
+  });
+}
+
 app
   .whenReady()
   .then(() => {
+    serveTileLayers();
     createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the

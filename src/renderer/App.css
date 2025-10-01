@@ -1,18 +1,41 @@
 body {    
-  background-color: rgb(65, 203, 65);
+  background-color: #128762;
   font-family: sans-serif;
 }
 
 header {
-  height: 30px;
+  height: 35px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   padding: 0 16px;
-  
-  color: rgb(13, 103, 1);
+  color: #14926a;
   font-size: xx-small;
   background-color: white;
   border-radius: 5px;
+}
+
+.map-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid #eee;
+}
+
+.map-buttons button {
+  padding: 4px 8px;
+  border-radius: 5px;
+  border: 2px solid #14926a;
+  color: #14926a;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.map-buttons .active {
+  color: white;
+  background-color: #14926a;
 }
 
 main {
@@ -36,9 +59,9 @@ main {
 
 .notes-section-header {
   font-size: medium;
-  color: rgb(13, 103, 1);
+  color: #14926a;
   border-bottom: 3px solid transparent;
-  border-image: linear-gradient(to left, #4caf50 0%, #a8e063 75%, transparent 150%);
+  border-image: linear-gradient(to left, #14926a 0%, #a8e063 75%, transparent 150%);
   border-image-slice: 1;
   width: 90%;
   margin-left: 10px;
@@ -86,7 +109,7 @@ main {
   display: flex;
   align-items: center;
   padding: 4px 6px;
-  color: rgb(13, 103, 1);
+  color: #14926a;
 }
 
 .delete-icon {

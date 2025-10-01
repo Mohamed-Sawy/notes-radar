@@ -16,6 +16,9 @@ function Map() {
     className: 'marker-icon'
   });
 
+  const [showBoundaries, setShowBoundaries] = useState(false);
+  const [showTiles, setShowTiles] = useState(false);
+
   const [markers, setMarkers] = useState<
     {
       id: number;
@@ -79,19 +82,31 @@ function Map() {
     <div>
       <header>
         <h1>Notes Radar</h1>
+        <span className="map-buttons">
+            <button className={`map-tilelayers ${showTiles ? "active" : ""}`} onClick={() => {setShowTiles(!showTiles)}}>
+              {showTiles ? "Hide Tiles" : "Show Tiles"}
+            </button>
+            <button className={`map-geojson ${showBoundaries ? "active" : ""}`} onClick={() => {setShowBoundaries(!showBoundaries)}}>
+              {showBoundaries ? "Hide Boundaries" : "Show Boundaries"}
+            </button>
+        </span>
       </header>
     
       <main>
     
       <div className='map-section'>
         <MapContainer center={[27.89, 30.53]}zoom={5} minZoom={1} maxZoom={8} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-          <GeoJSON
+          {(showTiles && <TileLayer
+            url="http://localhost:3000/tiles/{z}/{x}/{y}.jpg"
+            attribution="Offline Tiles"
+          />)}
+          
+          {(showBoundaries && <GeoJSON
             data={egyptMap as GeoJSON.FeatureCollection}
             style={{
               color: "#7372726e",
               weight: 2,
               fillColor: "#DBDBDB",
-              fillOpacity: 0.3
             }}
             eventHandlers={{
               click: (e) => {
@@ -99,9 +114,9 @@ function Map() {
                 setModalData({ isOpen: true, curGeocode: [e.latlng.lat, e.latlng.lng] });
               }
             }}
-          />
+          />)}
 
-          {(markers.map(marker => (
+          {((showTiles || showBoundaries) && (markers.map(marker => (
             <Marker key={marker.id} position={marker.geocode} icon={customIcon}>
               <Popup>
                 <div className='marker-popup'>
@@ -110,7 +125,7 @@ function Map() {
                 </div>
               </Popup>
             </Marker>
-          )))}
+          ))))}
 
         </MapContainer>
 
