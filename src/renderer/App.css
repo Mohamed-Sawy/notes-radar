@@ -108,67 +108,85 @@ main {
   background: none;
 }
 
-/* modal container */
+.marker-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.marker-note {
+  font-weight: bold;
+  color: #333;
+}
+
+.marker-date {
+  font-style: italic;
+  font-size: 85%;
+  color: #666;
+}
+
 .marker-modal {
   position: absolute;
-  width: 300px;
+  width: 400px;
   height: 300px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10000;
-  background: #fff;
-  border-radius: 10px;
-  width: 400px;
-  max-width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  font-family: Arial, sans-serif;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.25);
 }
 
-/* header with gradient */
-.marker-modal .modal-header {
+.modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   background: linear-gradient(90deg, #66d37e, #43cea2);
   color: white;
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: large;
 }
 
-.marker-modal .modal-header .geocode {
+.modal-header .geocode {
   background: rgba(255, 255, 255, 0.25);
-  border-radius: 6px;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.50);
   padding: 2px 6px;
-  font-size: 0.8rem;
+  font-size: x-small;
 }
 
-/* body */
-.marker-modal .modal-body {
+.modal-body {
   padding: 16px;
 }
 
-.marker-modal textarea {
+.modal-note {
   width: 100%;
-  min-height: 100px;
+  height: 100px;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 1px solid #ccc;
   resize: none;
   outline: none;
-  font-size: 0.95rem;
+  font-size: 14px;
   box-sizing: border-box;
 }
 
-.marker-modal textarea:focus {
+.modal-note:focus {
   border-color: #43cea2;
   box-shadow: 0 0 3px #43cea2;
 }
 
-/* buttons */
-.marker-modal .modal-buttons {
+.modal-warning {
+  color: red;
+  font-size: 10px;
+  margin: 8px 8px;
+}
+
+.modal-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
@@ -181,25 +199,25 @@ main {
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 500;
 }
 
-.marker-modal button:first-of-type {
+.modal-submit {
   background: #43cea2;
   color: white;
 }
 
-.marker-modal button:first-of-type:disabled {
+.modal-submit:disabled {
   background: #ccc;
   cursor: not-allowed;
 }
 
-.marker-modal button:last-of-type {
+.modal-close {
   background: #f5f5f5;
   color: #333;
 }
 
-.marker-modal button:last-of-type:hover {
+.modal-close:hover {
   background: #e0e0e0;
 }

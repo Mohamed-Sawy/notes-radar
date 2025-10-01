@@ -95,7 +95,7 @@ function Map() {
             }}
             eventHandlers={{
               click: (e) => {
-                console.log(e);
+                if (modalData.isOpen) return;
                 setModalData({ isOpen: true, curGeocode: [e.latlng.lat, e.latlng.lng] });
               }
             }}
@@ -104,9 +104,9 @@ function Map() {
           {(markers.map(marker => (
             <Marker key={marker.id} position={marker.geocode} icon={customIcon}>
               <Popup>
-                <div>
-                  <p><strong>{marker.note}</strong></p>
-                  <small><em>Added on: {marker.createdAt.toLocaleString()}</em></small>
+                <div className='marker-popup'>
+                  <div className='marker-note'>{marker.note}</div>
+                  <div className='marker-date'>Added on: {marker.createdAt.toLocaleString()}</div>
                 </div>
               </Popup>
             </Marker>
@@ -125,20 +125,19 @@ function Map() {
               </div>
 
               <div className='modal-body'>
-                <textarea
-                  value={markerNote}
+                <textarea className='modal-note' value={markerNote}
                   onChange={(e) => setmarkerNote(e.target.value)}
-                  placeholder="Enter your note..."
-
+                  placeholder="Enter your note here..."
                 />
+
                 {!markerNote.trim() && (
-                  <p style={{ color: "red" }}>Note cannot be empty</p>
+                  <div className='modal-warning'>Note cannot be empty</div>
                 )}
               </div>
 
               <div className="modal-buttons">
-                <button onClick={handleModalInput} disabled={!markerNote.trim()}>Add Marker</button>
-                <button onClick={() => setModalData({ isOpen: false, curGeocode: null })}>Cancel</button>
+                <button className='modal-close' onClick={() => {setModalData({ isOpen: false, curGeocode: null }); setmarkerNote("");}}>Cancel</button>
+                <button className='modal-submit' onClick={handleModalInput} disabled={!markerNote.trim()}>Add Marker</button>
               </div>
           </div>
         )}
