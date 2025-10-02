@@ -136,7 +136,7 @@ function Map() {
 
         {modalData.isOpen && (  
           <>
-            <div className='modal-backshadow'></div>
+            <div className='modal-backdrop'></div>
             
             <div className="marker-modal">
                 <div className='modal-header'>
