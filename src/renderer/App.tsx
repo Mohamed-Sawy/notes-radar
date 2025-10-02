@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { useState, useEffect } from 'react';
 import egyptMap from '../../assets/world-administrative-boundaries.json'
 import L from 'leaflet';
-import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, Marker, Popup, useMapEvents } from 'react-leaflet';
 
 function Map() {
   const customIcon = new L.Icon({
@@ -95,66 +95,75 @@ function Map() {
       <main>
     
       <div className='map-section'>
-        <MapContainer center={[27.89, 30.53]}zoom={5} minZoom={1} maxZoom={8} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
-          {(showTiles && <TileLayer
-            url="http://localhost:3000/tiles/{z}/{x}/{y}.jpg"
-            attribution="Offline Tiles"
-          />)}
+        <MapContainer center={[27.89, 30.53]} zoom={5} minZoom={1} maxZoom={8} scrollWheelZoom={true} style={{ height: '100%', width: '100%' }}>
+          {(showTiles &&
+            <TileLayer
+              url="http://localhost:3000/tiles/{z}/{x}/{y}.jpg"
+              attribution="Offline Tiles"
+            />
+          )}
           
-          {(showBoundaries && <GeoJSON
-            data={egyptMap as GeoJSON.FeatureCollection}
-            style={{
-              color: "#7372726e",
-              weight: 2,
-              fillColor: "#DBDBDB",
-            }}
-            eventHandlers={{
-              click: (e) => {
-                if (modalData.isOpen) return;
-                setModalData({ isOpen: true, curGeocode: [e.latlng.lat, e.latlng.lng] });
-              }
-            }}
-          />)}
+          {(showBoundaries &&
+            <GeoJSON
+              data={egyptMap as GeoJSON.FeatureCollection}
+              style={{
+                color: "#7372726e",
+                weight: 2,
+                fillColor: "#DBDBDB",
+                fillOpacity: 0.1
+              }}
+            />
+          )}
 
-          {((showTiles || showBoundaries) && (markers.map(marker => (
-            <Marker key={marker.id} position={marker.geocode} icon={customIcon}>
-              <Popup>
-                <div className='marker-popup'>
-                  <div className='marker-note'>{marker.note}</div>
-                  <div className='marker-date'>Added on: {marker.createdAt.toLocaleString()}</div>
-                </div>
-              </Popup>
-            </Marker>
-          ))))}
+          {((showTiles || showBoundaries) && (
+            <>
+              {markers.map(marker => (
+                <Marker key={marker.id} position={marker.geocode} icon={customIcon}>
+                  <Popup>
+                    <div className='marker-popup'>
+                      <div className='marker-note'>{marker.note}</div>
+                      <div className='marker-date'>Added on: {marker.createdAt.toLocaleString()}</div>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+          
+              <MapClickHandler onClick={(lat, lng) => setModalData({ isOpen: true, curGeocode: [lat, lng] })}/>
+            </>
+          ))}
 
         </MapContainer>
 
-        {modalData.isOpen && (
-          <div className="marker-modal">
-              <div className='modal-header'>
-                <span>Add Note</span>
-                <span className='geocode'>  {modalData.curGeocode ? 
-                modalData.curGeocode.map((val) => val.toFixed(3)).join(", ")
-                : ""
-                }</span>
-              </div>
+        {modalData.isOpen && (  
+          <>
+            <div className='modal-backshadow'></div>
+            
+            <div className="marker-modal">
+                <div className='modal-header'>
+                  <span>Add Note</span>
+                  <span className='geocode'>  {modalData.curGeocode ? 
+                  modalData.curGeocode.map((val) => val.toFixed(3)).join(", ")
+                  : ""
+                  }</span>
+                </div>
 
-              <div className='modal-body'>
-                <textarea className='modal-note' value={markerNote}
-                  onChange={(e) => setmarkerNote(e.target.value)}
-                  placeholder="Enter your note here..."
-                />
+                <div className='modal-body'>
+                  <textarea className='modal-note' value={markerNote}
+                    onChange={(e) => setmarkerNote(e.target.value)}
+                    placeholder="Enter your note here..."
+                  />
 
-                {!markerNote.trim() && (
-                  <div className='modal-warning'>Note cannot be empty</div>
-                )}
-              </div>
+                  {!markerNote.trim() && (
+                    <div className='modal-warning'>Note cannot be empty</div>
+                  )}
+                </div>
 
-              <div className="modal-buttons">
-                <button className='modal-close' onClick={() => {setModalData({ isOpen: false, curGeocode: null }); setmarkerNote("");}}>Cancel</button>
-                <button className='modal-submit' onClick={handleModalInput} disabled={!markerNote.trim()}>Add Marker</button>
-              </div>
-          </div>
+                <div className="modal-buttons">
+                  <button className='modal-close' onClick={() => {setModalData({ isOpen: false, curGeocode: null }); setmarkerNote("");}}>Cancel</button>
+                  <button className='modal-submit' onClick={handleModalInput} disabled={!markerNote.trim()}>Add Marker</button>
+                </div>
+            </div>
+          </>
         )}
 
       </div>
@@ -188,6 +197,15 @@ function Map() {
       </main>
     </div>
   );
+}
+
+function MapClickHandler({ onClick }: { onClick: (lat: number, lng: number) => void }) {
+  useMapEvents({
+    click(e) {
+      onClick(e.latlng.lat, e.latlng.lng);
+    },
+  });
+  return null;
 }
 
 export default function App() {
